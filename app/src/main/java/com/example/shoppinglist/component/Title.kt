@@ -1,4 +1,5 @@
-package com.example.shoppinglist.component
+
+package com.example.shoppinglist.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -8,9 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
+import com.example.shoppinglist.ui.theme.ShoppingListTheme
 
 @Composable
 fun Title() {
@@ -26,4 +28,12 @@ fun Title() {
             .padding(vertical = 16.dp),
         textAlign = TextAlign.Center
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TitlePreview() {
+    ShoppingListTheme {
+        Title()
+    }
 }
