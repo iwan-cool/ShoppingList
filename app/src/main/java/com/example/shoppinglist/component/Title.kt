@@ -1,4 +1,3 @@
-
 package com.example.shoppinglist.component
 
 import androidx.compose.foundation.layout.fillMaxWidth

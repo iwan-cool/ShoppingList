@@ -19,9 +19,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import com.example.shoppinglist.component.ItemInput
 import com.example.shoppinglist.component.SearchInput
 import com.example.shoppinglist.component.ShoppingList
@@ -29,6 +31,7 @@ import com.example.shoppinglist.component.Title
 import com.example.shoppinglist.ui.theme.ShoppingListTheme
 import kotlinx.coroutines.launch
 import androidx.navigation.compose.currentBackStackEntryAsState
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +49,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun ShoppingListApp() {
     val navController = rememberNavController()
@@ -106,14 +109,32 @@ fun ShoppingListApp() {
                 }
             }
         ) { innerPadding ->
-            NavHost(
+            AnimatedNavHost(
                 navController = navController,
                 startDestination = "home",
                 modifier = Modifier.padding(innerPadding)
             ) {
-                composable(route = "home") { HomeScreen() }
-                composable(route = "profile") { ProfileScreen() }
-                composable(route = "setting") { SettingScreen() }
+                composable(
+                    route = "home",
+                    enterTransition = { fadeIn(animationSpec = tween(400)) },
+                    exitTransition = { fadeOut(animationSpec = tween(400)) }
+                ) {
+                    HomeScreen()
+                }
+                composable(
+                    route = "profile",
+                    enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(500)) },
+                    exitTransition = { slideOutHorizontally(targetOffsetX = { -1000 }, animationSpec = tween(500)) }
+                ) {
+                    ProfileScreen()
+                }
+                composable(
+                    route = "setting",
+                    enterTransition = { fadeIn(animationSpec = tween(400)) },
+                    exitTransition = { fadeOut(animationSpec = tween(400)) }
+                ) {
+                    SettingScreen()
+                }
             }
         }
     }
@@ -143,7 +164,7 @@ fun HomeScreen() {
             text = newItemText,
             onTextChange = { newItemText = it },
             onAddItem = {
-                if (newItemText.isNotBlank) {
+                if (newItemText.isNotBlank()) {
                     shoppingItems.add(newItemText)
                     newItemText = ""
                 }
@@ -165,6 +186,7 @@ fun ProfileScreen() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
+        // Foto profil bulat
         Card(
             shape = CircleShape,
             modifier = Modifier.size(130.dp),
@@ -183,6 +205,7 @@ fun ProfileScreen() {
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        // Kartu biodata
         Card(
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier
@@ -205,9 +228,9 @@ fun ProfileScreen() {
                 Divider(thickness = 0.5.dp)
                 ProfileItem(label = "TTL", value = "Bekasi, 14 Mei 2005")
                 Divider(thickness = 0.5.dp)
-                ProfileItem(label = "Hobi", value = "Olahraga, Nonton film")
+                ProfileItem(label = "Hobi", value = "Olahraga, Nonton")
                 Divider(thickness = 0.5.dp)
-                ProfileItem(label = "Peminatan", value = "Programming")
+                ProfileItem(label = "Peminatan", value = "Web Dev")
             }
         }
     }
@@ -249,6 +272,7 @@ fun SettingScreen() {
             fontWeight = FontWeight.Bold
         )
 
+        // Kartu pengaturan tampilan
         Card(
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier.fillMaxWidth(),
@@ -286,6 +310,7 @@ fun SettingScreen() {
             }
         }
 
+        // Kartu info aplikasi
         Card(
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier.fillMaxWidth(),
@@ -306,8 +331,8 @@ fun SettingScreen() {
                     fontWeight = FontWeight.Bold
                 )
                 Text("Shopping List App v1.0")
-                Text("Dibuat oleh: Laila Qadriyah")
-                Text("Peminatan: Mobile Programming")
+                Text("Dibuat oleh: Ikhwan Hamidi")
+                Text("Peminatan: Web Dev")
             }
         }
     }
